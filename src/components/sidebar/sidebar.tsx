@@ -8,6 +8,7 @@ import { FaMicrophone } from "react-icons/fa6";
 import { useState } from "react";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 const Sidebar = () => {
 	const navlist = [
@@ -45,24 +46,28 @@ const Sidebar = () => {
 			<div
 				className={`flex  h-full
                bg-slate-50  transition-all duration-500 ease-in-out ${
-									sidebarOpen ? "w-60" : "w-20"
+									sidebarOpen ? "w-60" : "w-24"
 								}`}
 			>
 				<div
 					className="flex flex-col
                     items-start justify-start h-full px-6 "
 				>
-					<button>
+					<Button
+						className="flex flex-row items-center justify-center h-20
+						 transition-all duration-500 ease-in-out"
+					variant={"ghost"}
+					>
 						<div
 							className="flex flex-row items-center justify-center h-20
-                        hover:bg-slate-300 transition-all duration-500 ease-in-out"
+                         transition-all duration-500 ease-in-out"
 							onClick={() => setSidebarOpen(!sidebarOpen)}
 						>
 							<div className="text-xl">
 								{sidebarOpen ? <MdArrowBackIos /> : <MdArrowForwardIos />}
 							</div>
 						</div>
-					</button>
+					</Button>
 
 					{navlist.map((item, index) => (
 						<Link

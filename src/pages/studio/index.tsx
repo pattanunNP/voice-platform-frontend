@@ -67,7 +67,7 @@ function Studio() {
 					<p className="text-2xl">แล้วอ่านประโยคข้างล่างนี้ดัง ๆ </p>
 				</div>
 				<Card className="flex my-5 px-4 py-4 flex-col justify-center items-center w-[820px] h-72 ring-blue-500 ring-1">
-					<p className="text-3xl font-bold text-center">
+					<p className="text-3xl font-bold text-center font-sans">
 						ไก่จิกเด็กตายบนปากโอ่ง ไก่เห็นตัวเองในน้ำ ไก่จึงรู้จักตัวเอง
 					</p>
 				</Card>

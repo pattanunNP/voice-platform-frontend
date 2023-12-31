@@ -60,7 +60,7 @@ function StudioListen() {
 					<p className="text-2xl">พวกเขาพูดประโยคถูกต้องหรือไม่?</p>
 				</div>
 				<Card className="flex my-5 px-4 py-4 flex-col justify-center items-center w-[820px] h-72 ring-blue-500 ring-1">
-					<p className="text-3xl font-bold text-center">
+					<p className="text-3xl font-bold text-center font-sans">
 						เรียน รองคณบดีฝ่ายกิจการนักศึกษา คณะสังคมวิทยาและมานุษยวิทยา
 					</p>
 				</Card>

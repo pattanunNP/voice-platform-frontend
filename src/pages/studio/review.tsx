@@ -17,7 +17,7 @@ function StudioReview() {
 				</div>
 				<div className="flex flex-row space-x-4">
 					<Card className="flex my-5 px-4 py-4 flex-col justify-center items-center w-[800px] h-72 ring-blue-500 ring-1">
-						<p className="text-3xl font-bold text-center">
+						<p className="text-3xl font-bold text-center font-sans">
 							เรียน รองคณบดีฝ่ายกิจการนักศึกษา คณะสังคมวิทยาและมานุษยวิทยา
 						</p>
 						<p className="mt-20 text-gray-400">

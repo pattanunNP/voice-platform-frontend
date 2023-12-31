@@ -210,7 +210,7 @@ function Setting() {
 
 								<div>
 									<Label className="text-xs font-normal" htmlFor="accent">
-										สำเนียง
+										คุณจะอธิบายสำเนียงของคุณว่าอย่างไร?
 									</Label>
 									<Select name="accent">
 										<SelectTrigger className="w-[320px]">
@@ -252,6 +252,9 @@ function Setting() {
 						<span className="text-lg font-medium">เพิ่มภาษา</span>
 					</Button>
 				</div>
+				<Button className="w-48 my-5 h-12 rounded-full justify-center items-center">
+					<span className="text-lg font-medium">บันทึก</span>
+				</Button>
 			</div>
 		</Layout>
 	);
