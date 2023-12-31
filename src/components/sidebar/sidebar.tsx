@@ -41,7 +41,7 @@ const Sidebar = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 
 	return (
-		<div className="flex flex-row h-full">
+		<div className=" flex flex-row h-full">
 			<div
 				className={`flex  h-full
                bg-slate-50  transition-all duration-500 ease-in-out ${

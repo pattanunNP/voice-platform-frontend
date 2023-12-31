@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Inter } from "next/font/google";
+
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
@@ -9,7 +9,8 @@ import Image from "next/image";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/pagination";
-import Navbar from "@/components/navbar/navbar";
+
+import LandingNavbar from "@/components/navbar/landingnavbar";
 
 const imageSlider = [
 	{
@@ -54,13 +55,11 @@ const imageSlider = [
 		src: "/images/7.png",
 	},
 ];
-const inter = Inter({ subsets: ["latin"] });
-
 
 function Login() {
 	return (
-		<main className={`min-h-screen h-screen  w-screen ${inter.className}`}>
-			<Navbar />
+		<main className={`min-h-screen h-screen  w-screen `}>
+			<LandingNavbar />
 			<div className="flex flex-row w-full h-full justify-between bg-white">
 				<div className="flex w-1/2 h-full bg-none">
 					<div className="relative flex h-full w-full justify-center items-center">
@@ -115,6 +114,7 @@ function Login() {
 								type="email"
 								name="email"
 								id="email"
+								placeholder="email"
 								className=" w-full h-12"
 							/>
 							<label htmlFor="password">Password</label>
@@ -122,11 +122,12 @@ function Login() {
 								type="password"
 								name="password"
 								id="password"
+								placeholder="password"
 								className="h-12 w-full"
 							/>
 							<Button
 								variant="default"
-								className=" text-white 
+								className=" text-white  bg-emerald-500
 							 rounded-xl h-12 w-full text-xl font-normal"
 							>
 								Login

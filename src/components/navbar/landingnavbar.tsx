@@ -7,9 +7,9 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
 const LandingNavbar: FC = () => {
-    const navigate = useRouter();
+	const navigate = useRouter();
 	return (
-		<div className="flex flex-col w-full">
+		<nav className="z-10 fixed flex flex-col w-full">
 			<header className="shrink-0 border-b w-full border-gray-200 bg-gray-950">
 				<div className="flex flex-row w-full text-white h-20 items-center justify-between px-2  space-x-4 ">
 					<div className="flex flex-row space-x-2 items-center w-96">
@@ -26,38 +26,34 @@ const LandingNavbar: FC = () => {
 
 					<div className="flex flex-row justify-end w-80">
 						<div className="flex flex-row space-x-2 w-full ">
-							<Link
+							<a
 								href="/studio"
 								className="flex flex-row space-x-2 items-center w-72"
 							>
 								สตูดิโอ
-							</Link>
-							<Link
+							</a>
+							<a
 								href="/"
 								className="flex flex-row space-x-2 items-center w-72"
 							>
 								คลังเสียง
-							</Link>
-							<Link
-								href="/"
-								className="flex flex-row space-x-2 items-center w-72"
-							>
+							</a>
+							<a href="/" className="flex flex-row space-x-2 items-center w-72">
 								นักพัฒนา
-							</Link>
-							<Link
-								href="/"
-								className="flex flex-row space-x-2 items-center w-72"
-							>
+							</a>
+							<a href="/" className="flex flex-row space-x-2 items-center w-72">
 								ราคา
-							</Link>
+							</a>
 						</div>
 
 						<div className="flex flex-row space-x-4">
-							<Button 
-                            onClick={()=>{
-navigate.push("/auth/login")
-                            }}
-                            variant={"outline"} className="text-emerald-500 bg-none">
+							<Button
+								onClick={() => {
+									navigate.push("/auth/login");
+								}}
+								variant={"outline"}
+								className="text-emerald-500 bg-none"
+							>
 								Sign In
 							</Button>
 							<Button className="bg-emerald-500 text-white">Sign Up</Button>
@@ -65,7 +61,7 @@ navigate.push("/auth/login")
 					</div>
 				</div>
 			</header>
-		</div>
+		</nav>
 	);
 };
 

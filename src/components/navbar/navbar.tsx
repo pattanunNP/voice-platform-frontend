@@ -2,11 +2,11 @@ import { FC } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import Link from "next/link";
+
 
 const Navbar: FC = () => {
 	return (
-		<div className="flex flex-col w-full">
+		<nav className="sticky flex flex-col w-full">
 			<header className="shrink-0 border-b w-full border-gray-200 bg-gray-950">
 				<div className="flex flex-row w-full text-white h-20 items-center justify-between px-2  space-x-4 ">
 					<div className="flex flex-row space-x-2 items-center w-96">
@@ -23,30 +23,21 @@ const Navbar: FC = () => {
 
 					<div className="flex flex-row justify-end w-80">
 						<div className="flex flex-row space-x-2 w-full ">
-							<Link
+							<a
 								href="/studio"
 								className="flex flex-row space-x-2 items-center w-72"
 							>
 								สตูดิโอ
-							</Link>
-							<Link
-								href="/"
-								className="flex flex-row space-x-2 items-center w-72"
-							>
+							</a>
+							<a href="/" className="flex flex-row space-x-2 items-center w-72">
 								คลังเสียง
-							</Link>
-							<Link
-								href="/"
-								className="flex flex-row space-x-2 items-center w-72"
-							>
+							</a>
+							<a href="/" className="flex flex-row space-x-2 items-center w-72">
 								นักพัฒนา
-							</Link>
-							<Link
-								href="/"
-								className="flex flex-row space-x-2 items-center w-72"
-							>
+							</a>
+							<a href="/" className="flex flex-row space-x-2 items-center w-72">
 								ราคา
-							</Link>
+							</a>
 						</div>
 
 						<div className="flex items-center  w-full px-6">
@@ -59,7 +50,7 @@ const Navbar: FC = () => {
 					</div>
 				</div>
 			</header>
-		</div>
+		</nav>
 	);
 };
 

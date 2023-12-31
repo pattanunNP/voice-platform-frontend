@@ -1,12 +1,9 @@
 import LandingNavbar from "@/components/navbar/landingnavbar";
 
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
 	return (
-		<main className={`min-h-screen h-screen  w-screen ${inter.className}`}>
+		<main className={`min-h-screen h-screen  w-screen`}>
 			<div className="bg-white w-full h-full">
 				<LandingNavbar />
 
