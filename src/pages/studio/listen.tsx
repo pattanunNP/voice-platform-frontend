@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import { LiveAudioVisualizer } from "react-audio-visualize";
 import { FaPlay } from "react-icons/fa";
-import pad from "@/utils/padd";
 
 function StudioListen() {
 	const [audioData, setAudioData] = useState<string | null>(null);
@@ -19,7 +18,6 @@ function StudioListen() {
 		recordingBlob,
 		mediaRecorder,
 		startRecording,
-		recordingTime,
 		stopRecording,
 	} = useAudioRecorder();
 
@@ -45,11 +43,6 @@ function StudioListen() {
 		audio.play();
 	};
 
-	const convertSecToTime = (sec: number) => {
-		const minutes = Math.floor(sec / 60);
-		const seconds = sec - minutes * 60;
-		return `${pad(String(minutes), 2)}:${pad(String(seconds), 2)}`;
-	};
 
 	return (
 		<Layout>

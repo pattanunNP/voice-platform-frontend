@@ -9,7 +9,7 @@ import { HiMiniPause } from "react-icons/hi2";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import { useEffect, useState } from "react";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
-import { LiveAudioVisualizer,AudioVisualizer } from "react-audio-visualize";
+import { LiveAudioVisualizer } from "react-audio-visualize";
 import pad from "@/utils/padd";
 
 function Studio() {

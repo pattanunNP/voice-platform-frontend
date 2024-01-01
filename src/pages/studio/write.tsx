@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { FaCheckCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
-import { BsFillPatchCheckFill } from "react-icons/bs";
 import { FaPen } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
