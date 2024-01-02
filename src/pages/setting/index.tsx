@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
+import { useProfile } from "@/api/user/user";
+import { useForm } from "react-hook-form";
 
 const supportedLanguage = [
 	{
@@ -104,8 +106,26 @@ const accent = [
 		value: "en-pl",
 	},
 ];
+interface IFormValues {
+	username: string;
+	gender: string;
+	age: number;
+}
+
 function Setting() {
+	const { userdata } = useProfile();
+
 	const [language, setLanguage] = useState(["th"]);
+	const { register, handleSubmit } = useForm<IFormValues>({
+		defaultValues: {
+			username: userdata?.username,
+			gender: userdata?.gender,
+		},
+	});
+
+	const onSubmit = (data: IFormValues) => {
+		console.log(data);
+	};
 
 	return (
 		<Layout>
@@ -122,6 +142,8 @@ function Setting() {
 							ชื่อ
 						</Label>
 						<Input
+							defaultValue={userdata?.username}
+							{...register("username", { required: true })}
 							placeholder="ชื่อผู้ใช้"
 							className="w-[320px] h-10"
 							id="name"
@@ -131,7 +153,10 @@ function Setting() {
 						<Label className="text-xs font-normal" htmlFor="gender">
 							เพศสภาพ
 						</Label>
-						<Select name="gender">
+						<Select
+							{...register("age", { required: true })}
+							defaultValue={userdata?.gender}
+						>
 							<SelectTrigger className="w-[320px]">
 								<SelectValue placeholder="เลือกเพศ" />
 							</SelectTrigger>
@@ -148,47 +173,32 @@ function Setting() {
 						<Label className="text-xs font-normal" htmlFor="age">
 							อายุ
 						</Label>
-						<Select name="age">
-							<SelectTrigger className="w-[320px]">
-								<SelectValue placeholder="เลือกช่วงอายุ" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectGroup>
-									<SelectLabel>ช่วงอายุ</SelectLabel>
-									<SelectItem value="5-10">5-10 ปี</SelectItem>
-									<SelectItem value="11-14">11-14 ปี</SelectItem>
-									<SelectItem value="15-18">15-18 ปี</SelectItem>
-									<SelectItem value="19-20">19-20 ปี</SelectItem>
-									<SelectItem value="21-25">21-25 ปี</SelectItem>
-									<SelectItem value="26-30">26-30 ปี</SelectItem>
-									<SelectItem value="31-35">31-35 ปี</SelectItem>
-									<SelectItem value="36-40">36-40 ปี</SelectItem>
-									<SelectItem value="41-45">41-45 ปี</SelectItem>
-									<SelectItem value="46-50">46-50 ปี</SelectItem>
-									<SelectItem value="51-55">51-55 ปี</SelectItem>
-									<SelectItem value="56-60">56-60 ปี</SelectItem>
-									<SelectItem value="60+">60+ ปี</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
+						<Input
+							{...register("age", { required: true })}
+							defaultValue={userdata?.age}
+							placeholder="อายุ"
+							className="w-[320px] h-10"
+							id="age"
+							type="number"
+						/>
 					</div>
 				</div>
 				<div className="my-10 ">
 					<h1 className="text-3xl font-medium">ภาษา</h1>
 					<div className="my-2 flex flex-col space-y-5">
-						{language.map((lang, index) => (
+						{userdata?.languages.map((lang, index) => (
 							<Card
 								key={index}
-								className="w-full h-72 shadow-xs px-4 py-6 flex flex-col space-y-4 ring-1 ring-gray-100"
+								className="w-full h-full shadow-xs px-4 py-6 flex flex-col space-y-4 ring-1 ring-gray-100"
 							>
 								<Label className="text-xl font-semibold">
 									ภาษาที่ {index + 1}
 								</Label>
 								<div>
-									<Label className="text-xs font-normal" htmlFor="lang">
-										เลือกภาษา
+									<Label className="text-md font-normal" htmlFor="lang">
+										ภาษา: {lang.language.name}
 									</Label>
-									<Select name="lang">
+									{/* <Select name="lang">
 										<SelectTrigger className="w-[320px]">
 											<SelectValue placeholder="เลือกภาษา" />
 										</SelectTrigger>
@@ -205,14 +215,14 @@ function Setting() {
 												))}
 											</SelectGroup>
 										</SelectContent>
-									</Select>
+									</Select> */}
 								</div>
 
 								<div>
-									<Label className="text-xs font-normal" htmlFor="accent">
-										คุณจะอธิบายสำเนียงของคุณว่าอย่างไร?
+									<Label className="text-md font-normal" htmlFor="accent">
+										สำเนียง: {lang.Accent.name}
 									</Label>
-									<Select name="accent">
+									{/* <Select name="accent">
 										<SelectTrigger className="w-[320px]">
 											<SelectValue placeholder="เลือกสำเนียง" />
 										</SelectTrigger>
@@ -229,30 +239,37 @@ function Setting() {
 												))}
 											</SelectGroup>
 										</SelectContent>
-									</Select>
+									</Select> */}
 								</div>
-								<Button
+								{/* <Button
+									disabled={index === 0}
 									variant={"outline"}
-									className="w-full h-10 ring-red-500 ring-1 text-red-500 hover:bg-red-500 hover:text-white"
+									className="w-full h-10 ring-red-500 ring-1 text-red-500 hover:bg-red-500 hover:text-white disabled:ring-gray-500 disabled:text-gray-500 disabled:border-gray-500"
 									onClick={() =>
 										setLanguage(language.filter((_, i) => i !== index))
 									}
 								>
 									<span className="text-sm font-medium">ลบภาษา</span>
-								</Button>
+								</Button> */}
 							</Card>
 						))}
 					</div>
-					<Button
+					{/* <Button
+						disabled={language.length >= 2}
 						variant={"outline"}
-						className="w-full my-10 h-14 ring-1 ring-emerald-500"
+						className="w-full my-10 h-14 ring-1 ring-emerald-500
+						disabled:ring-gray-500 disabled:text-gray-500 disabled:border-gray-500
+						"
 						onClick={() => setLanguage([...language, "th"])}
 					>
 						<FaCirclePlus className="mr-2 text-2xl text-emerald-500" />
 						<span className="text-lg font-medium">เพิ่มภาษา</span>
-					</Button>
+					</Button> */}
 				</div>
-				<Button className="w-48 my-5 h-12 rounded-full justify-center items-center">
+				<Button
+					onClick={handleSubmit(onSubmit)}
+					className="w-48 my-5 h-12 rounded-full justify-center items-center"
+				>
 					<span className="text-lg font-medium">บันทึก</span>
 				</Button>
 			</div>

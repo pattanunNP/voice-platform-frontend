@@ -1,9 +1,10 @@
 import FETCHER from "@/services/_fetcher";
+import { UserLanguage } from "@/types/language";
 import { useQuery } from "react-query";
 
 export interface IUserRes {
 	user_id: string;
-	name: string;
+	username: string;
 	expires_in: number;
 	firstname: string;
 	lastname: string;
@@ -13,6 +14,7 @@ export interface IUserRes {
 	role: string;
 	age: number;
 	gender: string;
+	languages: UserLanguage[];
 }
 
 const getUser = () => {

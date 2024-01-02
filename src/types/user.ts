@@ -1,6 +1,8 @@
-export type IUser ={
+import { UserLanguage } from "./language";
+
+export type User ={
     user_id: string;
-    name: string;
+    username: string;
     expires_in: number;
     firstname: string;
     lastname: string;
@@ -10,4 +12,5 @@ export type IUser ={
     role: string;
     age: number;
     gender: string;
+    languages: UserLanguage[];
 }

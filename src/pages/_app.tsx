@@ -1,8 +1,10 @@
+import RouteGuard from "@/components/guard/RouteGuard";
 import { queryClient } from "@/services/_fetcher";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Kanit } from "next/font/google";
 import { QueryClientProvider } from "react-query";
+
 
 const kanit = Kanit({
 	subsets: ["thai"],
@@ -10,11 +12,15 @@ const kanit = Kanit({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+	
+
 	return (
 		<QueryClientProvider client={queryClient}>
-			<div className={`${kanit.className}`}>
-				<Component {...pageProps} />
-			</div>
+			<RouteGuard>
+				<div className={`${kanit.className}`}>
+					<Component {...pageProps} />
+				</div>
+			</RouteGuard>
 		</QueryClientProvider>
 	);
 }
