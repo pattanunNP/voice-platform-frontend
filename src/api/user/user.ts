@@ -1,6 +1,7 @@
 import FETCHER from "@/services/_fetcher";
 import { UserLanguage } from "@/types/language";
-import { useQuery } from "react-query";
+import { UserProfileUpdate } from "@/types/user";
+import { useMutation, useQuery } from "react-query";
 
 export interface IUserRes {
 	user_id: string;
@@ -36,4 +37,15 @@ export const useProfile = () => {
 		isLoading,
 		refetchProfile: refetch,
 	};
+};
+
+const putUpdateProfile = (body:UserProfileUpdate) => {
+	return FETCHER.put("/user/profile",body);
+};
+
+export const useUpdateProfile = () => {
+	const { mutateAsync: updateProfile } = useMutation(putUpdateProfile, {
+		retry: 1,
+	});
+	return { updateProfile };
 };

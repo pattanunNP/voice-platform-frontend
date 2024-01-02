@@ -14,3 +14,10 @@ export type User ={
     gender: string;
     languages: UserLanguage[];
 }
+
+export type UserProfileUpdate = {
+    username?: string;
+    firstname?: string;
+    lastname?: string;
+    age?: number;
+}

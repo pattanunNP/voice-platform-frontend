@@ -14,117 +14,36 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
-import { useProfile } from "@/api/user/user";
+import { useProfile, useUpdateProfile } from "@/api/user/user";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-const supportedLanguage = [
-	{
-		label: "ภาษาไทย",
-		value: "th",
-	},
-	{
-		label: "ภาษาอังกฤษ",
-		value: "en",
-	},
-];
-
-const accent = [
-	{
-		label: "ภาษาไทย (เหนือ)",
-		value: "th-northern",
-	},
-	{
-		label: "ภาษาไทย (กลาง)",
-		value: "th-central",
-	},
-	{
-		label: "ภาษาไทย (ใต้)",
-		value: "th-southern",
-	},
-	{
-		label: "ภาษาอังกฤษ (อังกฤษ)",
-		value: "en-gb",
-	},
-	{
-		label: "ภาษาอังกฤษ (อเมริกัน)",
-		value: "en-us",
-	},
-	{
-		label: "ภาษาอังกฤษ (ออสเตรเลีย)",
-		value: "en-au",
-	},
-	{
-		label: "ภาษาอังกฤษ (อินเดีย)",
-		value: "en-in",
-	},
-	{
-		label: "ภาษาอังกฤษ (เกาหลี)",
-		value: "en-kr",
-	},
-	{
-		label: "ภาษาอังกฤษ (ญี่ปุ่น)",
-		value: "en-jp",
-	},
-	{
-		label: "ภาษาอังกฤษ (จีน)",
-		value: "en-cn",
-	},
-	{
-		label: "ภาษาอังกฤษ (ฝรั่งเศส)",
-		value: "en-fr",
-	},
-	{
-		label: "ภาษาอังกฤษ (เยอรมัน)",
-		value: "en-de",
-	},
-	{
-		label: "ภาษาอังกฤษ (อิตาลี)",
-		value: "en-it",
-	},
-	{
-		label: "ภาษาอังกฤษ (สเปน)",
-		value: "en-es",
-	},
-	{
-		label: "ภาษาอังกฤษ (โปรตุเกส)",
-		value: "en-pt",
-	},
-	{
-		label: "ภาษาอังกฤษ (เบลเยียม)",
-		value: "en-be",
-	},
-	{
-		label: "ภาษาอังกฤษ (สวีเดน)",
-		value: "en-se",
-	},
-	{
-		label: "ภาษาอังกฤษ (เดนมาร์ก)",
-		value: "en-dk",
-	},
-	{
-		label: "ภาษาอังกฤษ (โปแลนด์)",
-		value: "en-pl",
-	},
-];
 interface IFormValues {
 	username: string;
 	gender: string;
 	age: number;
+	firstname: string;
+	lastname: string;
 }
 
 function Setting() {
 	const { userdata } = useProfile();
+	const { register, handleSubmit } = useForm<IFormValues>();
+	const { updateProfile } = useUpdateProfile();
 
-	const [language, setLanguage] = useState(["th"]);
-	const { register, handleSubmit } = useForm<IFormValues>({
-		defaultValues: {
-			username: userdata?.username,
-			gender: userdata?.gender,
-		},
-	});
-
-	const onSubmit = (data: IFormValues) => {
+	const onSubmit = async (data: IFormValues) => {
 		console.log(data);
+
+		const payload = {
+			...data,
+			age: Number(data.age),
+		};
+
+		// await updateProfile(payload);
+		// toast.success("บันทึกสำเร็จ", {
+		// 	position: "top-right",
+		// 	duration: 1500,
+		// });
 	};
 
 	return (
@@ -136,26 +55,59 @@ function Setting() {
 					VerbiloVoice
 					มีประโยชน์ต่อการเพิ่มความแม่นยำของกลไกการรู้จำเสียงพูดซึ่งใช้ข้อมูลนี้มากขึ้น
 				</p>
-				<div className="my-10 grid grid-cols-2 gap-3">
+				<form
+					className="my-10 grid grid-cols-2 gap-3"
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					<div>
 						<Label className="text-xs font-normal" htmlFor="name">
-							ชื่อ
+							ชื่อจริง
 						</Label>
 						<Input
-							defaultValue={userdata?.username}
-							{...register("username", { required: true })}
-							placeholder="ชื่อผู้ใช้"
+							disabled
+							defaultValue={userdata?.firstname}
+							{...register("firstname")}
+							placeholder="ชื่อจริง"
 							className="w-[320px] h-10"
 							id="name"
 						/>
 					</div>
 					<div>
+						<Label className="text-xs font-normal" htmlFor="name">
+							นามสกุล
+						</Label>
+						<Input
+							disabled
+							defaultValue={userdata?.lastname}
+							{...register("lastname")}
+							placeholder="นามสกุล"
+							className="w-[320px] h-10"
+							id="name"
+						/>
+					</div>
+					<div>
+						<Label className="text-xs font-normal" htmlFor="name">
+							ชื่อผู้ใช้
+						</Label>
+						<Input
+							disabled
+							defaultValue={userdata?.username}
+							{...register("username")}
+							placeholder="ชื่อผู้ใช้"
+							className="w-[320px] h-10"
+							id="name"
+						/>
+					</div>
+
+					<div>
 						<Label className="text-xs font-normal" htmlFor="gender">
 							เพศสภาพ
 						</Label>
 						<Select
-							{...register("age", { required: true })}
+							disabled
+							{...register("gender")}
 							defaultValue={userdata?.gender}
+							value={userdata?.gender}
 						>
 							<SelectTrigger className="w-[320px]">
 								<SelectValue placeholder="เลือกเพศ" />
@@ -174,7 +126,8 @@ function Setting() {
 							อายุ
 						</Label>
 						<Input
-							{...register("age", { required: true })}
+							disabled
+							{...register("age")}
 							defaultValue={userdata?.age}
 							placeholder="อายุ"
 							className="w-[320px] h-10"
@@ -182,7 +135,14 @@ function Setting() {
 							type="number"
 						/>
 					</div>
-				</div>
+				</form>
+				<Button
+				disabled
+					type="submit"
+					className="w-48 my-5 h-12 rounded-full justify-center items-center"
+				>
+					<span className="text-lg font-medium">บันทึก</span>
+				</Button>
 				<div className="my-10 ">
 					<h1 className="text-3xl font-medium">ภาษา</h1>
 					<div className="my-2 flex flex-col space-y-5">
@@ -266,12 +226,6 @@ function Setting() {
 						<span className="text-lg font-medium">เพิ่มภาษา</span>
 					</Button> */}
 				</div>
-				<Button
-					onClick={handleSubmit(onSubmit)}
-					className="w-48 my-5 h-12 rounded-full justify-center items-center"
-				>
-					<span className="text-lg font-medium">บันทึก</span>
-				</Button>
 			</div>
 		</Layout>
 	);
