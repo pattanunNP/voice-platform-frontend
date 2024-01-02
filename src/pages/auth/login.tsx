@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
+import { VscLoading } from "react-icons/vsc";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
@@ -11,6 +11,11 @@ import "swiper/css/scrollbar";
 import "swiper/css/pagination";
 
 import LandingNavbar from "@/components/navbar/landingnavbar";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { customClaimsSign, sessionLogin } from "@/api/auth/auth";
+import { useRouter } from "next/router";
 
 const imageSlider = [
 	{
@@ -56,7 +61,40 @@ const imageSlider = [
 	},
 ];
 
+interface IFormValues {
+	email: string;
+	password: string;
+}
+
 function Login() {
+	const nagivation = useRouter();
+	const [loading, setLoading] = useState<boolean>(false);
+	const { register, handleSubmit } = useForm<IFormValues>();
+
+
+	async function login(data: IFormValues) {
+		const res = await axios.post(
+			`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
+			{
+				email: data.email,
+				password: data.password,
+			},
+		);
+
+		const json = await res.data;
+		const customToken = await customClaimsSign(json.token);
+		console.log(customToken);
+		await sessionLogin(customToken.token);
+		setLoading(false);
+		nagivation.push("/studio");
+	}
+
+	const onSubmit = async (data: IFormValues) => {
+		setLoading(true);
+		console.log(data);
+		await login(data);
+	};
+
 	return (
 		<main className={`min-h-screen h-screen  w-screen `}>
 			<LandingNavbar />
@@ -90,7 +128,7 @@ function Login() {
 									<Image
 										src={item.src}
 										width={1920}
-										height={1080}
+										height={1000}
 										className="
 										opacity-100
 										bg-blend-darken
@@ -104,33 +142,44 @@ function Login() {
 				</div>
 				<div className="flex w-full h-full justify-center items-center px-10">
 					<Card className="flex flex-col space-y-4 w-[450px] h-96 justify-center p-4 items-center ">
-						<h1 className="text-black text-3xl font-bold my-5">Login</h1>
+						<h1 className="text-black text-3xl font-semibold my-5">Login</h1>
 						<form
+							onSubmit={handleSubmit(onSubmit)}
 							className="flex flex-col space-y-4 w-full items-start 
 						  justify-start"
 						>
 							<label htmlFor="email">Email</label>
 							<Input
 								type="email"
-								name="email"
+								{...register("email", {
+									required: true,
+								})}
 								id="email"
-								placeholder="email"
+								placeholder="Email"
 								className=" w-full h-12"
 							/>
 							<label htmlFor="password">Password</label>
 							<Input
 								type="password"
-								name="password"
+								{...register("password", {
+									required: true,
+								})}
 								id="password"
-								placeholder="password"
+								placeholder="Password"
 								className="h-12 w-full"
 							/>
 							<Button
+								type="submit"
 								variant="default"
 								className=" text-white  bg-emerald-500
-							 rounded-xl h-12 w-full text-xl font-normal"
+							 rounded-xl h-12 w-full text-xl font-normal flex items-center justify-center space-x-4"
 							>
-								Login
+								{loading && (
+									<div className="flex items-center justify-center">
+										<VscLoading className="w-5 h-5  rounded-full animate-spin" />
+									</div>
+								)}
+								<p>Login</p>
 							</Button>
 						</form>
 					</Card>

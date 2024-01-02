@@ -1,7 +1,7 @@
 import Layout from "@/components/layouts/layouts";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { VscMicFilled } from "react-icons/vsc";
+import { VscLoading, VscMicFilled } from "react-icons/vsc";
 import { MdRestartAlt } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
 import { FaRegPlayCircle } from "react-icons/fa";
@@ -9,11 +9,21 @@ import { HiMiniPause } from "react-icons/hi2";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import { useEffect, useState } from "react";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
-import { LiveAudioVisualizer } from "react-audio-visualize";
+import { LiveAudioVisualizer } from "@/components/liveaudio/LiveAudioVisualizer";
 import pad from "@/utils/padd";
+import { useSentenceFeed } from "@/api/sentences/sentence";
+import { usePostClip } from "@/api/clips/clips";
+import { toast } from "sonner";
 
 function Studio() {
 	const [audioData, setAudioData] = useState<string | null>(null);
+	const { sentenceFeed, isLoading, refetchSentenceFeed } = useSentenceFeed();
+	const { submitClip } = usePostClip();
+	const [sentenceId, setSentenceId] = useState<string | null>(null);
+	const [currentItem, setCurrentItem] = useState(0);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [audioFile, setAudioFile] = useState<File | null>(null);
+
 	const {
 		isRecording,
 		recordingBlob,
@@ -29,35 +39,75 @@ function Studio() {
 	};
 
 	useEffect(() => {
-		if (!recordingBlob) return;
+		if (!sentenceFeed) return;
+		setSentenceId(sentenceFeed[currentItem]?.id as string);
+	}, [currentItem, sentenceFeed]);
 
-		// recordingBlob will be present at this point after 'stopRecording' has been called
+	useEffect(() => {
+		if (!recordingBlob) return;
 		addAudioElement(recordingBlob);
 	}, [recordingBlob]);
 
+	useEffect(() => {
+		createAudioFile(recordingBlob!);
+	}, [recordingBlob]);
+
+	const createAudioFile = (blob: Blob) => {
+		const hash = Math.random().toString(36).substring(2, 15);
+		const filename = `${hash}.wav`;
+		const file = new File([blob], filename);
+		setAudioFile(file);
+	};
+
 	const addAudioElement = (blob: Blob) => {
 		const url = URL.createObjectURL(blob);
-		const audio = document.createElement("audio");
-		audio.src = url;
-		audio.controls = true;
-		// document.body.appendChild(audio);
+		
+		
 		setAudioData(url);
 	};
 
 	const clearAudioElement = () => {
-		const audio = document.querySelector("audio");
-		if (audio) {
-			audio.pause();
-			audio.src = "";
-			document.body.removeChild(audio);
+		if (audioData) {
+			URL.revokeObjectURL(audioData);
+			setAudioData(null);
 		}
 	};
+
 	const convertSecToTime = (sec: number) => {
 		const minutes = Math.floor(sec / 60);
 		const seconds = sec - minutes * 60;
 		return `${pad(String(minutes), 2)}:${pad(String(seconds), 2)}`;
 	};
 
+	const submitAudio = async () => {
+		const formData = new FormData();
+		formData.append("sentenceId", sentenceId!);
+		formData.append("file", audioFile!);
+		setIsSubmitting(true);
+		await submitClip(formData);
+		toast.success("ส่งไฟล์เสียงสำเร็จ", {
+			position: "top-right",
+			duration: 1500,
+		});
+		// console.log(response);
+		setIsSubmitting(false);
+		clearAudioElement();
+		setCurrentItem(currentItem + 1);
+		if (sentenceFeed?.length === currentItem + 1) {
+			console.log("refetch");
+			refetchSentenceFeed();
+			setCurrentItem(0);
+		}
+	};
+
+	const nextSentence = () => {
+		setCurrentItem(currentItem + 1);
+		if (sentenceFeed?.length === currentItem + 1) {
+			console.log("refetch");
+			refetchSentenceFeed();
+			setCurrentItem(0);
+		}
+	};
 	return (
 		<Layout>
 			<div className="w-full h-screen flex flex-col my-10 items-center space-x-4 ">
@@ -66,17 +116,39 @@ function Studio() {
 					<VscMicFilled className="text-3xl text-red-500" />
 					<p className="text-2xl">แล้วอ่านประโยคข้างล่างนี้ดัง ๆ </p>
 				</div>
-				<Card className="flex my-5 px-4 py-4 flex-col justify-center items-center w-[820px] h-72 ring-blue-500 ring-1">
-					<p className="text-3xl font-bold text-center font-sans">
-						ไก่จิกเด็กตายบนปากโอ่ง ไก่เห็นตัวเองในน้ำ ไก่จึงรู้จักตัวเอง
-					</p>
-				</Card>
+				{/* <p>{currentItem + 1}</p> */}
+				<div className="w-full flex justify-center items-center">
+					<Card className="flex my-5 px-4 py-4 flex-col justify-center items-center w-[720px] h-80 ring-blue-500 ring-1">
+						{isLoading ? (
+							<div className="w-64 h-6 animate-pulse rounded-lg bg-slate-300" />
+						) : (
+							sentenceFeed &&
+							sentenceFeed?.length > 0 && (
+								<p className="text-3xl font-bold text-center  font-sans">
+									{sentenceFeed?.[currentItem]?.content}
+								</p>
+							)
+						)}
+						{isLoading ? (
+							<div className="mt-10 w-48 h-4 animate-pulse rounded-lg bg-slate-200" />
+						) : (
+							sentenceFeed &&
+							sentenceFeed?.length > 0 && (
+								<p className="mt-10 text-xs text-gray-400">
+									ทีมา: {sentenceFeed?.[currentItem]?.source}
+								</p>
+							)
+						)}
+					</Card>
+				</div>
+
 				<Button
 					className="flex flex-row space-x-2 my-5 rounded-full w-32 h-10"
 					variant={"outline"}
 					onClick={() => {
 						clearAudioElement();
 						setAudioData(null);
+						nextSentence();
 					}}
 				>
 					<TbPlayerTrackNextFilled className="text-2xl" />
@@ -87,6 +159,7 @@ function Studio() {
 					<p className="text-2xl">
 						เวลาที่อ่านไปแล้ว: {convertSecToTime(recordingTime)}
 					</p>
+
 					<div className="my-5">
 						{mediaRecorder && (
 							<LiveAudioVisualizer
@@ -97,7 +170,7 @@ function Studio() {
 							/>
 						)}
 					</div>
-					
+
 					<Button
 						onClick={isRecording ? stopRecording : startRecording}
 						className="my-5 flex flex-row space-x-2 w-20 h-20 rounded-full"
@@ -122,11 +195,21 @@ function Studio() {
 							<p>ลบเสียง</p>
 						</Button>
 						<Button
+							onClick={submitAudio}
+							disabled={!audioData}
 							className="flex flex-row space-x-2  w-32 bg-emerald-500
-						"
+						disabled:bg-gray-400 disabled:cursor-not-allowed
+							"
 						>
-							<IoIosSend className="text-2xl" />
-							<p>ส่งไฟล์เสียง</p>
+							{isSubmitting ? (
+								<div className="flex items-center justify-center">
+									<VscLoading className="w-5 h-5  rounded-full animate-spin" />
+								</div>
+							) : (
+								<IoIosSend className="text-2xl" />
+							)}
+
+							{isSubmitting ? <p>กำลังส่ง</p> : <p>ส่งไฟล์เสียง</p>}
 						</Button>
 						<Button
 							variant={"outline"}

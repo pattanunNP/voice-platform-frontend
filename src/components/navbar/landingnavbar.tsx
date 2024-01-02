@@ -26,27 +26,27 @@ const LandingNavbar: FC = () => {
 
 					<div className="flex flex-row justify-end w-80">
 						<div className="flex flex-row space-x-2 w-full ">
-							<a
+							<Link
 								href="/studio"
 								className="flex flex-row space-x-2 items-center w-72"
 							>
 								สตูดิโอ
-							</a>
-							<a
+							</Link>
+							<Link
 								href="/"
 								className="flex flex-row space-x-2 items-center w-72"
 							>
 								คลังเสียง
-							</a>
-							<a href="/" className="flex flex-row space-x-2 items-center w-72">
+							</Link>
+							<Link href="/" className="flex flex-row space-x-2 items-center w-72">
 								นักพัฒนา
-							</a>
-							<a href="/" className="flex flex-row space-x-2 items-center w-72">
+							</Link>
+							<Link href="/" className="flex flex-row space-x-2 items-center w-72">
 								ราคา
-							</a>
+							</Link>
 						</div>
 
-						<div className="flex flex-row space-x-4">
+						<div className="flex flex-row space-x-4 px-4">
 							<Button
 								onClick={() => {
 									navigate.push("/auth/login");
@@ -56,7 +56,7 @@ const LandingNavbar: FC = () => {
 							>
 								Sign In
 							</Button>
-							<Button className="bg-emerald-500 text-white">Sign Up</Button>
+							
 						</div>
 					</div>
 				</div>
